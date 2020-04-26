@@ -1,0 +1,18 @@
+[package]
+name = "freefeed-rs"
+version = "0.1.0"
+
+[lib]
+name = "freefeed"
+path = "src/lib/lib.rs"
+doc = true
+test = true
+edition = "2018"
+
+[dependencies]
+reqwest = { version = "0.10", features = ["brotli", "gzip", "json"] }
+serde = { version = "1.0" }
+serde_derive = { version = "1.0" }
+serde_json = { version = "1.0" }
+thiserror = { version = "1.0" }
+tokio = { version = "0.2", features = ["full"] }
