@@ -21,10 +21,18 @@ struct Opts {
 enum Command {
     #[clap(alias = "me")]
     Me(MeOpts),
+    #[clap(alias = "get-post")]
+    GetPost(GetPostOps),
 }
 
 #[derive(Clap)]
 struct MeOpts {
+}
+
+#[derive(Clap)]
+struct GetPostOps {
+    #[clap(required = true)]
+    uuid: String,
 }
 
 #[tokio::main]
@@ -44,9 +52,10 @@ async fn main() {
         }
     };
 
+    let client = api_client(origin.deref(), token.as_deref());
+
     match opts.command {
         Command::Me(_) => {
-            let client = api_client(origin.deref(), token.as_deref());
             match client.get_me().await {
                 Ok(val) => println!("{}", val),
                 Err(e) => {
@@ -54,6 +63,16 @@ async fn main() {
                     exit(1);
                 }
             }
+        },
+        Command::GetPost(opts) => {
+            match client.get_a_post(opts.uuid.as_str()).await {
+                Ok(val) => println!("{}", val),
+                Err(e) => {
+                    eprintln!("Error: {}", e);
+                    exit(1);
+                }
+            }
+            exit(0);
         }
     }
 }
