@@ -7,9 +7,9 @@ use freefeed::api::api_client;
 
 #[derive(Clap)]
 struct Opts {
-    /// Specify API origin. Will fall back to FRF_ORIGIN or "https://candy.freefeed.net/"
-    #[clap(short, long)]
-    origin: Option<String>,
+    /// Specify API origin. Will fall back to FRF_ORIGIN or "https://candy.freefeed.net"
+    #[clap(short, long, env = "FRF_ORIGIN", default_value = "https://candy.freefeed.net")]
+    origin: String,
     /// Specify your API Token. Will fall-back to FRF_TOKEN
     #[clap(short, long)]
     token: Option<String>,
@@ -19,7 +19,8 @@ struct Opts {
 
 #[derive(Clap)]
 enum Command {
-    Me(MeOpts)
+    #[clap(alias = "me")]
+    Me(MeOpts),
 }
 
 #[derive(Clap)]
@@ -30,13 +31,7 @@ struct MeOpts {
 async fn main() {
     let opts: Opts = Opts::parse();
 
-    let origin = match opts.origin {
-        Some(val) => val,
-        None => match env::var("FRF_ORIGIN") {
-            Ok(val) => val,
-            Err(_e) => String::from("https://candy.freefeed.net"),
-        }
-    };
+    let origin = opts.origin;
 
     let token: Option<String>  = match opts.token {
         Some(val) => Some(val),
