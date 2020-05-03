@@ -38,20 +38,20 @@ async fn main() {
         }
     };
 
-    let token  = match opts.token {
-        Some(val) => val,
+    let token: Option<String>  = match opts.token {
+        Some(val) => Some(val),
         None => match env::var("FRF_TOKEN") {
-            Ok(val) => val,
+            Ok(val) => Some(val),
             Err(_e) => {
-                eprintln!("FRF_TOKEN env variable is not found\nConsider using https://direnv.net/ to set it");
-                exit(1);
+                eprintln!("FRF_TOKEN env variable is not found\nConsider using https://direnv.net/ to set it\n\nWill work in anonymous mode");
+                None
             }
         }
     };
 
     match opts.command {
         Command::Me(_) => {
-            let client = api_client(origin.deref(), Some(token.deref()));
+            let client = api_client(origin.deref(), token.as_deref());
             match client.get_me().await {
                 Ok(val) => println!("{}", val),
                 Err(e) => {
