@@ -31,6 +31,7 @@ fn handle_reqwest_errors(response: Result<Response, Error>) -> Result<Response, 
                 StatusCode::OK => Ok(response),
                 StatusCode::FORBIDDEN => Err(FreefeedApiError::AuthorizationRequired),
                 StatusCode::UNAUTHORIZED => Err(FreefeedApiError::AuthorizationRequired),
+                StatusCode::NOT_FOUND => Err(FreefeedApiError::ResourceNotFound),
                 _ => Err(FreefeedApiError::UnknownError)
             }
         },
