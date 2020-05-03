@@ -38,7 +38,6 @@ impl ApiClient {
         match self.post_to_api("/v1/posts", &post_obj).await {
             Ok(response) => match response.json::<serde_json::Value>().await {
                 Ok(response_struct) => {
-                    println!("{}", response_struct);
                     let body_string: String = response_struct["posts"]["id"].to_string();
                     Ok(body_string)
                 },

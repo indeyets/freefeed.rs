@@ -42,7 +42,6 @@ impl ApiClient {
         match self.get_from_api(&path).await {
             Ok(response) => match response.json::<serde_json::Value>().await {
                 Ok(response_struct) => {
-                    println!("{}", response_struct);
                     let body_string: String = response_struct["users"]["username"].to_string();
                     Ok(body_string)
                 },

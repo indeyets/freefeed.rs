@@ -27,7 +27,6 @@ fn handle_reqwest_errors(response: Result<Response, Error>) -> Result<Response, 
         Ok(response) => {
             let code = response.status();
 
-            println!("code = {}", code);
             match code {
                 StatusCode::OK => Ok(response),
                 StatusCode::FORBIDDEN => Err(FreefeedApiError::AuthorizationRequired),
