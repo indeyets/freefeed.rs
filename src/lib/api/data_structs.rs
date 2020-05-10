@@ -1,3 +1,5 @@
+use chrono::{DateTime, Local};
+
 pub struct User {
     pub uuid: String,
     pub username: String,
@@ -15,4 +17,6 @@ pub struct Post {
     pub attachments: Vec<Attachment>,
     pub author: User,
     pub body: String,
+    pub created_at: DateTime<Local>,
+    pub updated_at: DateTime<Local>,
 }

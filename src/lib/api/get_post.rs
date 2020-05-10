@@ -3,6 +3,7 @@ use serde_derive::{Deserialize};
 use crate::errors::FreefeedApiError;
 use crate::api::client::ApiClient;
 use crate::api::data_structs::{Post, User, Attachment};
+use chrono::{DateTime, Local, TimeZone};
 
 #[derive(Debug, Deserialize)]
 struct PostsResponse {
@@ -17,6 +18,10 @@ pub struct PostsResponsePost {
     body: String,
     #[serde(rename = "createdBy")]
     created_by: String,
+    #[serde(rename = "createdAt")]
+    created_at: String,
+    #[serde(rename = "updatedAt")]
+    updated_at: String,
     comments: Vec<String>,
     likes: Vec<String>,
 }
@@ -49,6 +54,8 @@ impl ApiClient {
                 Ok(response_struct) => {
                     let body_string: String = response_struct.posts.body;
                     let author_uuid: String = response_struct.posts.created_by;
+                    let created_at: DateTime<Local> = Local.timestamp_millis(response_struct.posts.created_at.parse::<i64>().unwrap());
+                    let updated_at: DateTime<Local> = Local.timestamp_millis(response_struct.posts.updated_at.parse::<i64>().unwrap());
 
                     let mut author: Option<PostsResponseUser> = None;
                     for user in response_struct.users {
@@ -74,7 +81,9 @@ impl ApiClient {
                                     username: author.username,
                                     screen_name: author.screen_name,
                                 },
-                                body: body_string
+                                body: body_string,
+                                created_at,
+                                updated_at,
                             })
                         },
                         None => {
