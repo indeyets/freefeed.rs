@@ -110,6 +110,8 @@ impl ApiClient {
                         })
                         .collect();
 
+
+
                     match author {
                         Some(author) => {
                             Ok(Post {
@@ -120,7 +122,15 @@ impl ApiClient {
                                     username: author.username,
                                     screen_name: author.screen_name,
                                 },
-                                body: response_struct.posts.body,
+                                body: String::from(&response_struct.posts.body),
+                                likes: response_struct.posts.likes.iter().map(|uuid| -> User {
+                                    let u = user_by_uuid(&response_struct.users, &uuid).unwrap();
+                                    User {
+                                        uuid: u.id,
+                                        username: u.username,
+                                        screen_name: u.screen_name,
+                                    }
+                                }).collect(),
                                 created_at,
                                 updated_at,
                             })

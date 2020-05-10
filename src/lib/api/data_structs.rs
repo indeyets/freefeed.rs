@@ -18,6 +18,7 @@ pub struct Post {
     pub author: User,
     pub body: String,
     pub comments: Vec<Comment>,
+    pub likes: Vec<User>,
     pub created_at: DateTime<Local>,
     pub updated_at: DateTime<Local>,
 }

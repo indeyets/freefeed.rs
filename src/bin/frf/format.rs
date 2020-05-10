@@ -42,6 +42,17 @@ pub fn format_post(val: Post) {
         }
     }
 
+    if val.likes.len() > 0 {
+        let likes = val.likes.iter().map(|u| format!("{} (@{})", u.screen_name, u.username)).collect::<Vec<String>>().join(", ");
+
+        let w = Wrapper::new(termwidth() - 2)
+            .initial_indent("  ")
+            .subsequent_indent("    ");
+
+        let result = format!("{} liked this", likes);
+        println!("\n{}", w.fill(&result));
+    }
+
     if val.comments.len() > skip_comments {
         println!("\nComments:\n");
 
