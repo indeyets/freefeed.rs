@@ -16,7 +16,7 @@ pub fn format_post(val: Post) {
     if val.attachments.len() > 0 {
         println!("\nAttachments:");
         for attachment in val.attachments {
-            println!("- {} ({} bytes)", attachment.file_name, attachment.file_size);
+            println!("- \"{}\" ({} bytes)", attachment.file_name, attachment.file_size);
             println!("  {}", attachment.url);
         }
     }
