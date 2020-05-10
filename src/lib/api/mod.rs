@@ -5,3 +5,4 @@ mod get_post;
 mod profile;
 
 pub use client::api_client;
+pub use data_structs::*;

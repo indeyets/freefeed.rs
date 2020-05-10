@@ -5,6 +5,9 @@ use std::ops::Deref;
 use clap::Clap;
 use freefeed::api::api_client;
 
+mod format;
+use format::format_post;
+
 #[derive(Clap)]
 struct Opts {
     /// Specify API origin. Will fall back to FRF_ORIGIN or "https://candy.freefeed.net"
@@ -67,16 +70,7 @@ async fn main() {
         Command::GetPost(opts) => {
             match client.get_a_post(opts.uuid.as_str()).await {
                 Ok(val) => {
-                    println!("From: {} ({}):\n", val.author.screen_name, val.author.username);
-                    println!("{}", val.body);
-
-                    if val.attachments.len() > 0 {
-                        println!("\nAttachments:");
-                        for attachment in val.attachments {
-                            println!("- {} ({} bytes)", attachment.file_name, attachment.file_size);
-                            println!("  {}", attachment.url);
-                        }
-                    }
+                    format_post(val);
                 },
                 Err(e) => {
                     eprintln!("Error: {}", e);
