@@ -17,6 +17,14 @@ pub struct Post {
     pub attachments: Vec<Attachment>,
     pub author: User,
     pub body: String,
+    pub comments: Vec<Comment>,
+    pub created_at: DateTime<Local>,
+    pub updated_at: DateTime<Local>,
+}
+
+pub struct Comment {
+    pub body: String,
+    pub author: User,
     pub created_at: DateTime<Local>,
     pub updated_at: DateTime<Local>,
 }
