@@ -1,7 +1,7 @@
 use serde_derive::{Deserialize, Serialize};
 
-use crate::errors::FreefeedApiError;
 use crate::api::client::ApiClient;
+use crate::errors::FreefeedApiError;
 
 #[derive(Debug, Serialize)]
 struct Profile<'l> {
@@ -17,10 +17,10 @@ pub struct ProfileUser<'l> {
 }
 
 pub fn make_profile_user<'l>() -> ProfileUser<'l> {
-    return ProfileUser {
+    ProfileUser {
         screen_name: None,
-        description: None
-    };
+        description: None,
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -44,14 +44,18 @@ impl ApiClient {
                 Ok(response_struct) => {
                     let body_string: String = response_struct["users"]["username"].to_string();
                     Ok(body_string)
-                },
+                }
                 _ => Err(FreefeedApiError::UnknownParseError),
             },
-            Err(e) => Err(e)
+            Err(e) => Err(e),
         }
     }
 
-    pub async fn change_profile(self, user_uuid: &str, user: ProfileUser<'_>) -> Result<ProfileResponseUser, FreefeedApiError> {
+    pub async fn change_profile(
+        self,
+        user_uuid: &str,
+        user: ProfileUser<'_>,
+    ) -> Result<ProfileResponseUser, FreefeedApiError> {
         let path = format!("/v1/users/{}", user_uuid);
         let payload = Profile { user };
 
@@ -60,12 +64,19 @@ impl ApiClient {
                 Ok(response_struct) => Ok(response_struct.users),
                 _ => Err(FreefeedApiError::UnknownParseError),
             },
-            Err(e) => Err(e)
+            Err(e) => Err(e),
         }
     }
 
-    pub async fn change_screen_name(self, user_uuid: &str, screen_name: &str) -> Result<String, FreefeedApiError> {
-        let user = ProfileUser { screen_name: Some(screen_name), ..make_profile_user() };
+    pub async fn change_screen_name(
+        self,
+        user_uuid: &str,
+        screen_name: &str,
+    ) -> Result<String, FreefeedApiError> {
+        let user = ProfileUser {
+            screen_name: Some(screen_name),
+            ..make_profile_user()
+        };
 
         match self.change_profile(user_uuid, user).await {
             Ok(response_user) => Ok(response_user.screen_name),
@@ -73,8 +84,15 @@ impl ApiClient {
         }
     }
 
-    pub async fn change_description(self, user_uuid: &str, description: &str) -> Result<String, FreefeedApiError> {
-        let user = ProfileUser { description: Some(description), ..make_profile_user() };
+    pub async fn change_description(
+        self,
+        user_uuid: &str,
+        description: &str,
+    ) -> Result<String, FreefeedApiError> {
+        let user = ProfileUser {
+            description: Some(description),
+            ..make_profile_user()
+        };
 
         match self.change_profile(user_uuid, user).await {
             Ok(response_user) => Ok(response_user.description),

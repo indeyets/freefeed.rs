@@ -1,5 +1,5 @@
-use textwrap::{Wrapper, termwidth};
 use freefeed::api::Post;
+use textwrap::{termwidth, Wrapper};
 
 pub fn format_post(val: Post) {
     let w = Wrapper::with_termwidth()
@@ -23,7 +23,7 @@ pub fn format_post(val: Post) {
     println!("\n{}", w.fill(&val.body));
 
     let mut skip_comments = 0;
-    if val.comments.len() > 0 {
+    if !val.comments.is_empty() {
         for comment in &val.comments {
             if comment.author.uuid != val.author.uuid {
                 break;
@@ -34,16 +34,24 @@ pub fn format_post(val: Post) {
         }
     }
 
-    if val.attachments.len() > 0 {
+    if !val.attachments.is_empty() {
         println!("\nAttachments:\n");
         for attachment in val.attachments {
-            println!("  - \"{}\" ({} bytes)", attachment.file_name, attachment.file_size);
+            println!(
+                "  - \"{}\" ({} bytes)",
+                attachment.file_name, attachment.file_size
+            );
             println!("    {}", attachment.url);
         }
     }
 
-    if val.likes.len() > 0 {
-        let likes = val.likes.iter().map(|u| format!("{} (@{})", u.screen_name, u.username)).collect::<Vec<String>>().join(", ");
+    if !val.likes.is_empty() {
+        let likes = val
+            .likes
+            .iter()
+            .map(|u| format!("{} (@{})", u.screen_name, u.username))
+            .collect::<Vec<String>>()
+            .join(", ");
 
         let w = Wrapper::new(termwidth() - 2)
             .initial_indent("  ")
@@ -72,7 +80,10 @@ pub fn format_post(val: Post) {
             let message = if prev_author == curr_author {
                 format!("  {}\n", comment.body)
             } else {
-                format!("{} (@{}):\n{}\n", comment.author.screen_name, comment.author.username, comment.body)
+                format!(
+                    "{} (@{}):\n{}\n",
+                    comment.author.screen_name, comment.author.username, comment.body
+                )
             };
 
             prev_author = curr_author;
