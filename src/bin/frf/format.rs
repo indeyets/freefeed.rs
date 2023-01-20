@@ -1,13 +1,13 @@
 use freefeed::api::Post;
-use textwrap::{termwidth, Wrapper};
+use textwrap::{Options, fill, termwidth};
 
 pub fn format_post(val: Post) {
-    let w = Wrapper::with_termwidth()
+    let options = Options::with_termwidth()
         .initial_indent("")
         .subsequent_indent("     ");
 
     let from = format!("{} (@{})", val.author.screen_name, val.author.username);
-    println!("{}", w.fill(&from));
+    println!("{}", fill(&from, &options));
 
     let date = if val.created_at == val.updated_at {
         format!("on {}", val.created_at)
@@ -15,12 +15,12 @@ pub fn format_post(val: Post) {
         format!("on {} (updated on {})", val.created_at, val.updated_at)
     };
 
-    println!("{}", w.fill(&date));
+    println!("{}", fill(&date, &options));
 
-    let w = Wrapper::new(termwidth() - 2)
+    let options = Options::new(termwidth() - 2)
         .initial_indent("    ")
         .subsequent_indent("    ");
-    println!("\n{}", w.fill(&val.body));
+    println!("\n{}", fill(&val.body, &options));
 
     let mut skip_comments = 0;
     if !val.comments.is_empty() {
@@ -30,7 +30,7 @@ pub fn format_post(val: Post) {
             }
 
             skip_comments += 1;
-            println!("\n{}", w.fill(&comment.body));
+            println!("\n{}", fill(&comment.body, &options));
         }
     }
 
@@ -53,18 +53,18 @@ pub fn format_post(val: Post) {
             .collect::<Vec<String>>()
             .join(", ");
 
-        let w = Wrapper::new(termwidth() - 2)
+        let options = Options::new(termwidth() - 2)
             .initial_indent("  ")
             .subsequent_indent("    ");
 
         let result = format!("{} liked this", likes);
-        println!("\n{}", w.fill(&result));
+        println!("\n{}", fill(&result, &options));
     }
 
     if val.comments.len() > skip_comments {
         println!("\nComments:\n");
 
-        let w = Wrapper::new(termwidth() - 2)
+        let options = Options::new(termwidth() - 2)
             .initial_indent("  ")
             .subsequent_indent("    ");
 
@@ -87,7 +87,7 @@ pub fn format_post(val: Post) {
             };
 
             prev_author = curr_author;
-            println!("{}", w.fill(&message));
+            println!("{}", fill(&message, &options));
         }
     }
 }

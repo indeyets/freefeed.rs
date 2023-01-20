@@ -79,9 +79,9 @@ impl ApiClient {
                 Ok(response_struct) => {
                     let author_uuid: &str = &response_struct.posts.created_by;
                     let created_at: DateTime<Local> = Local
-                        .timestamp_millis(response_struct.posts.created_at.parse::<i64>().unwrap());
+                        .timestamp_millis_opt(response_struct.posts.created_at.parse::<i64>().unwrap()).unwrap();
                     let updated_at: DateTime<Local> = Local
-                        .timestamp_millis(response_struct.posts.updated_at.parse::<i64>().unwrap());
+                        .timestamp_millis_opt(response_struct.posts.updated_at.parse::<i64>().unwrap()).unwrap();
 
                     let author = user_by_uuid(&response_struct.users, author_uuid);
 
@@ -102,9 +102,9 @@ impl ApiClient {
                         .map(|comment| Comment {
                             body: comment.body.clone(),
                             created_at: Local
-                                .timestamp_millis(comment.created_at.parse::<i64>().unwrap()),
+                                .timestamp_millis_opt(comment.created_at.parse::<i64>().unwrap()).unwrap(),
                             updated_at: Local
-                                .timestamp_millis(comment.updated_at.parse::<i64>().unwrap()),
+                                .timestamp_millis_opt(comment.updated_at.parse::<i64>().unwrap()).unwrap(),
                             author: {
                                 let comment_author =
                                     user_by_uuid(&response_struct.users, &comment.created_by);

@@ -2,41 +2,39 @@ use std::env;
 use std::ops::Deref;
 use std::process::exit;
 
-use clap::Clap;
+use clap::{Parser, Subcommand, Args};
+
 use freefeed::api::api_client;
 
 mod format;
 use format::format_post;
 
-#[derive(Clap)]
+#[derive(Parser)]
 struct Opts {
     /// Specify API origin. Will fall back to FRF_ORIGIN or "https://candy.freefeed.net"
-    #[clap(
+    #[arg(
         short,
         long,
-        env = "FRF_ORIGIN",
         default_value = "https://candy.freefeed.net"
     )]
     origin: String,
     /// Specify your API Token. Will fall-back to FRF_TOKEN
-    #[clap(short, long)]
+    #[arg(short, long)]
     token: Option<String>,
-    #[clap(subcommand)]
+    #[command(subcommand)]
     command: Command,
 }
 
-#[derive(Clap)]
+#[derive(Subcommand)]
 enum Command {
-    #[clap(alias = "me")]
     Me(MeOpts),
-    #[clap(alias = "get-post")]
     GetPost(GetPostOps),
 }
 
-#[derive(Clap)]
+#[derive(Args)]
 struct MeOpts {}
 
-#[derive(Clap)]
+#[derive(Args)]
 struct GetPostOps {
     #[clap(required = true)]
     uuid: String,
