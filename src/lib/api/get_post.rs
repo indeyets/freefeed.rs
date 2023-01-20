@@ -134,7 +134,7 @@ impl ApiClient {
                                 .likes
                                 .iter()
                                 .map(|uuid| -> User {
-                                    let u = user_by_uuid(&response_struct.users, &uuid).unwrap();
+                                    let u = user_by_uuid(&response_struct.users, uuid).unwrap();
                                     User {
                                         uuid: u.id,
                                         username: u.username,

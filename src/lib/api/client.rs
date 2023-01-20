@@ -14,10 +14,7 @@ pub struct ApiClient {
 pub fn api_client(origin: &str, token: Option<&str>) -> ApiClient {
     ApiClient {
         origin: String::from(origin),
-        token: match token {
-            Some(token) => Some(String::from(token)),
-            None => None,
-        },
+        token: token.map(String::from),
         reqwest: Client::new(),
     }
 }

@@ -39,7 +39,7 @@ impl ApiClient {
     pub async fn get_me(self) -> Result<String, FreefeedApiError> {
         let path = "/v1/users/me";
 
-        match self.get_from_api(&path).await {
+        match self.get_from_api(path).await {
             Ok(response) => match response.json::<serde_json::Value>().await {
                 Ok(response_struct) => {
                     let body_string: String = response_struct["users"]["username"].to_string();

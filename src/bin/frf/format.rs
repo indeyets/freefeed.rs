@@ -58,7 +58,7 @@ pub fn format_post(val: Post) {
             .subsequent_indent("    ");
 
         let result = format!("{} liked this", likes);
-        println!("\n{}", fill(&result, &options));
+        println!("\n{}", fill(&result, options));
     }
 
     if val.comments.len() > skip_comments {

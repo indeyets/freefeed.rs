@@ -1,7 +1,6 @@
 [package]
 name = "freefeed-rs"
 license = "MIT"
-license-file = "LICENSE"
 version = "0.1.0"
 
 [lib]
