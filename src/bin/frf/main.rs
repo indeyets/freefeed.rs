@@ -15,6 +15,7 @@ struct Opts {
     #[arg(
         short,
         long,
+        env = "FRF_ORIGIN",
         default_value = "https://candy.freefeed.net"
     )]
     origin: String,
